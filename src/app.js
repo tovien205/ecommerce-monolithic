@@ -18,7 +18,7 @@ app.use('/api/shipments', shipmentRoutes);
 
 // Healthcheck Route
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Monolithic API is healthy' });
+  res.status(200).json({ status: 'OK' });
 });
 
 module.exports = app;

@@ -1,9 +1,8 @@
-
 # 1. Base image
 FROM node:20-bookworm-slim
 
-# 2. Cài OpenSSL cho Prisma
-RUN apt-get update -y && apt-get install -y openssl \
+# 2. Cài OpenSSL và curl cho Prisma & Healthcheck
+RUN apt-get update -y && apt-get install -y openssl curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. Tạo thư mục làm việc
