@@ -1,0 +1,130 @@
+### ==========================================
+### I. AUTHENTICATION & USER API
+### ==========================================
+
+### 1. Đăng ký User mẫu
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "uid": "U002",
+  "username": "user02",
+  "fullname": "Nguyen Van B",
+  "password": "123456",
+  "roleid": "R001",
+  "mid": "M001"
+}
+
+### 2. Đăng nhập lấy Token
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "user02",
+  "password": "123456"
+}
+
+### 3. Xem Profile người dùng
+GET http://localhost:3000/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+
+### ==========================================
+### II. PRODUCT API (CRUD)
+### ==========================================
+
+### 1. Tạo sản phẩm mới (Khởi tạo P001 với tồn kho = 10)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "pid": "P001",
+  "pname": "Laptop",
+  "price": 15000000,
+  "quantity": 10
+}
+
+### 2. Lấy toàn bộ danh sách sản phẩm
+GET http://localhost:3000/api/products
+
+### 3. Lấy chi tiết sản phẩm P001 (Kiểm tra tồn kho hiện tại)
+GET http://localhost:3000/api/products/P001
+
+### 4. Cập nhật thông tin sản phẩm P001
+PUT http://localhost:3000/api/products/P001
+Content-Type: application/json
+
+{
+  "pname": "Laptop Gaming",
+  "price": 18000000,
+  "quantity": 10
+}
+
+### 5. Xóa sản phẩm P001 (Dùng khi cần dọn dẹp data test)
+DELETE http://localhost:3000/api/products/P001
+
+
+### ==========================================
+### III. ORDER API & TEST TRANSACTION (BƯỚC 13 & 14)
+### ==========================================
+
+### 1. Đặt hàng TH1: Mua hợp lệ (qty = 2 => Thành công, Tồn kho giảm từ 10 xuống 8)
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+{
+  "items": [
+    {
+      "pid": "P001",
+      "qty": 2
+    }
+  ]
+}
+
+### 2. Đặt hàng TH2: Mua vượt tồn kho (qty = 100 => Thất bại, Báo lỗi 400 Bad Request)
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+{
+  "items": [
+    {
+      "pid": "P001",
+      "qty": 100
+    }
+  ]
+}
+
+### 3. Xác nhận Rollback: Kiểm tra lại tồn kho P001 (Tồn kho giữ nguyên = 8)
+GET http://localhost:3000/api/products/P001
+
+### 4. Xem danh sách đơn hàng đã tạo của User
+GET http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+### ==========================================
+### IV. SHIPMENT API (TEST BƯỚC 15)
+### ==========================================
+
+### 1. Xem thông tin Shipment theo Order ID (oid lấy từ kết quả tạo đơn hàng)
+GET http://localhost:3000/api/shipments/order/ORD_1792251072494
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+### 2. Cập nhật Shipment sang SHIPPING
+PATCH http://localhost:3000/api/shipments/SHIP_1792251072506/status
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+{
+  "status": "SHIPPING"
+}
+
+### 3. Cập nhật Shipment sang DELIVERED
+PATCH http://localhost:3000/api/shipments/SHIP_1792251072506/status
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwidXNlcm5hbWUiOiJ1c2VyMDIiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyMjM5MjI4LCJleHAiOjE3OTIzMjU2Mjh9._kHqqxqSvJKfCzoCbISqQJeRVtWp3u9Za-7GZw_K0Fg
+
+{
+  "status": "DELIVERED"
+}
