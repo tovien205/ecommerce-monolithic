@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Service Database PostgreSQL
   postgres:
     image: postgres:15-alpine
     container_name: ecommerce-postgres
@@ -13,6 +14,30 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+
+  # Service Node.js Express API
+  ecommerce-api:
+    build: .
+    container_name: ecommerce-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      # Dùng tên service 'postgres' làm host thay vì 'localhost'
+      DATABASE_URL: "postgresql://postgres:postgrespassword@postgres:5432/ecommercedb?schema=public"
+      JWT_SECRET: "your_super_secret_key"
+      JWT_EXPIRES_IN: "1d"
+    depends_on:
+      - postgres
+    networks:
+      - ecommerce-network
 
 volumes:
   postgres_data:
+
+networks:
+  ecommerce-network:
+    driver: bridge
