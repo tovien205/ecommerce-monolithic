@@ -1,3 +1,5 @@
+### System Health Check
+GET http://localhost:3000/health
 ### ==========================================
 ### I. AUTHENTICATION & USER API
 ### ==========================================
@@ -128,3 +130,53 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDAyIiwid
 {
   "status": "DELIVERED"
 }
+
+### Mục 6.1 - Đăng ký (chỉ gửi một lần) 
+POST http://localhost:3000/auth/register 
+Content-Type: application/json 
+ 
+{
+  "uid": "U005",
+  "username": "user04",
+  "fullname": "Nguyen Van B",
+  "password": "123456",
+  "roleid": "R001",
+  "mid": "M001"
+}
+
+### Mục 6.2 - Đăng nhập 
+POST http://localhost:3000/auth/login 
+Content-Type: application/json 
+ 
+{ 
+  "username": "user04", 
+  "password": "123456" 
+} 
+
+
+### Mục 7.1 - Đặt hàng KHÔNG TOKEN 
+POST http://localhost:3000/api/orders 
+Content-Type: application/json 
+ 
+{ 
+  "items": [ 
+    { "pid": "X", "qty": 2 }, 
+    { "pid": "Y", "qty": 5 } 
+  ] 
+}
+
+### Mục 7.2 - Đặt hàng CÓ TOKEN 
+POST http://localhost:3000/api/orders 
+Content-Type: application/json 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDA1IiwidXNlcm5hbWUiOiJ1c2VyMDQiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyNTIwMzYzLCJleHAiOjE3OTI2MDY3NjN9.5Qp3anI6BbrwjTIAv22IU7B4yFLxC0TwI12O484VKys 
+ 
+{ 
+  "items": [ 
+    { "pid": "Z", "qty": 2 }, 
+    { "pid": "E", "qty": 5 } 
+  ] 
+} 
+
+### Mục 7.3 - Xem Shipment 
+GET http://localhost:3000/api/shipments/order/ORD_1792303857959 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVMDA1IiwidXNlcm5hbWUiOiJ1c2VyMDQiLCJyb2xlaWQiOiJSMDAxIiwiaWF0IjoxNzkyNTIwMzYzLCJleHAiOjE3OTI2MDY3NjN9.5Qp3anI6BbrwjTIAv22IU7B4yFLxC0TwI12O484VKys
